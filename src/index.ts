@@ -1,1 +1,6 @@
-console.log("Hello from Mutualzz Rest API");
+import { App } from "./App";
+
+const app = new App();
+
+app.initMiddlewares();
+app.start();
