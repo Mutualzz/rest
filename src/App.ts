@@ -15,7 +15,6 @@ const upload = multer({
 });
 
 const controllers = [];
-
 class App {
     readonly app: express.Application;
     readonly http: Server;

@@ -1,4 +1,4 @@
-# Backend for Mutualzz
+# REST API for Mutualzz
 
 ## Team
 
