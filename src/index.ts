@@ -2,5 +2,7 @@ import { App } from "./App";
 
 const app = new App();
 
-app.initMiddlewares();
-app.start();
+(async () => {
+    await app.init();
+    app.start();
+})();

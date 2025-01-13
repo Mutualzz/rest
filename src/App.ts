@@ -5,8 +5,13 @@ import bodyParser from "body-parser";
 import multer from "multer";
 import cors from "cors";
 import { createServer, Server } from "http";
+import { AuthController } from "controllers/auth.controller";
 
-const port = process.env.PORT || 3000;
+import mongoose from "mongoose";
+import authMiddleware from "middlewares/auth.middleware";
+import errorMiddleware from "middlewares/error.middleware";
+
+const port = process.env.PORT ?? 3000;
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
@@ -14,7 +19,7 @@ const upload = multer({
     },
 });
 
-const controllers = [];
+const controllers = [new AuthController()];
 class App {
     readonly app: express.Application;
     readonly http: Server;
@@ -24,7 +29,12 @@ class App {
         this.http = createServer(this.app);
     }
 
-    initMiddlewares() {
+    async init() {
+        await mongoose
+            .connect(process.env.DATABASE ?? "")
+            .then(() => logger.info("Connected to MongoDB"))
+            .catch((err) => logger.error(err));
+
         this.app.use(
             cors({
                 origin: "*", // update this to match the domain you will make the request from
@@ -34,12 +44,14 @@ class App {
         this.app.use(helmet());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-    }
 
-    initControllers() {
+        this.app.use(authMiddleware);
+
         controllers.forEach((controller) => {
             this.app.use("/v1", controller.router);
         });
+
+        this.app.use(errorMiddleware);
     }
 
     start() {
