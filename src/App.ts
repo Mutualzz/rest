@@ -10,6 +10,7 @@ import { AuthController } from "controllers/auth.controller";
 import mongoose from "mongoose";
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";
+import { MainController } from "controllers/index.controller";
 
 const port = process.env.PORT ?? 3000;
 const upload = multer({
@@ -19,7 +20,7 @@ const upload = multer({
     },
 });
 
-const controllers = [new AuthController()];
+const controllers = [new MainController(), new AuthController()];
 class App {
     readonly app: express.Application;
     readonly http: Server;
