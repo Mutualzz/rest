@@ -78,7 +78,6 @@ const userSchema = new Schema(
                 delete ret.__v;
                 delete ret.password;
                 delete ret.privateKey;
-                delete ret.email;
                 return ret;
             },
         },
@@ -89,7 +88,6 @@ const userSchema = new Schema(
                 delete ret.__v;
                 delete ret.password;
                 delete ret.privateKey;
-                delete ret.email;
                 return ret;
             },
         },
