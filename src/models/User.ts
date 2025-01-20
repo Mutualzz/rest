@@ -56,11 +56,13 @@ const userSchema = new Schema(
         },
     },
     {
+        // Methods
         methods: {
             generateToken: function () {
                 return jwt.sign(this.toJSON(), JWT_SECRET);
             },
         },
+        // Virtuals
         virtuals: {
             id: {
                 get: function () {
@@ -71,6 +73,7 @@ const userSchema = new Schema(
                 },
             },
         },
+        // Making sure we remove sensitive data from the response
         toJSON: {
             virtuals: true,
             transform: function (_, ret) {
