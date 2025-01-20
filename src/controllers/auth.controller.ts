@@ -8,7 +8,6 @@ import {
 } from "express";
 import UserModel from "models/User";
 import { validateLogin, validateSignup } from "validation/auth.validation";
-import { ZodError } from "zod";
 
 import bcrypt from "bcrypt";
 import crypto from "crypto";
@@ -27,13 +26,16 @@ export class AuthController {
 
     async signup(req: Request, res: Response, next: NextFunction) {
         try {
+            // Destructure and validate request body
             const { username, email, password, globalName, dateOfBirth } =
                 validateSignup.parse(req.body);
 
+            // Check if user already exists
             const userExists = await UserModel.findOne({
                 $or: [{ username }, { email }],
             });
 
+            // If user exists, throw an error
             if (userExists) {
                 if (userExists.username === username) {
                     throw new HttpException(
@@ -50,9 +52,11 @@ export class AuthController {
                 }
             }
 
+            // Hash password
             const salt = bcrypt.genSaltSync(11);
             const hash = bcrypt.hashSync(password, salt);
 
+            // Generate private key, encrypt password, and create new user
             const privateKey = crypto.randomBytes(256).toString("base64");
             const encrypted = new Cryptr(privateKey).encrypt(hash);
             const newPass = encrypt(encrypted);
@@ -71,44 +75,26 @@ export class AuthController {
                 updatedTimestamp: Date.now(),
             });
 
+            // Respond with success
             res.status(HTTP_RESPONSE_CODE.CREATED).json({
                 success: true,
             });
-        } catch (err) {
-            let error = err;
-
-            if (err instanceof HttpException)
-                error = new HttpException(
-                    HTTP_RESPONSE_CODE.BAD_REQUEST,
-                    err.message,
-                    err.errors
-                );
-
-            if (err instanceof ZodError) {
-                const errors = err.errors.map((error) => ({
-                    path: error.path[0].toString(),
-                    message: error.message,
-                }));
-
-                error = new HttpException(
-                    HTTP_RESPONSE_CODE.BAD_REQUEST,
-                    "Invalid request data",
-                    errors
-                );
-            }
-
+        } catch (error) {
             next(error);
         }
     }
 
     async login(req: Request, res: Response, next: NextFunction) {
         try {
+            // Destructure and validate request body
             const { username, email, password } = validateLogin.parse(req.body);
 
+            // Find user by username or email
             const user = await UserModel.findOne({
                 $or: [{ username }, { email }],
             });
 
+            // If user does not exist, throw an error
             if (!user)
                 throw new HttpException(
                     HTTP_RESPONSE_CODE.BAD_REQUEST,
@@ -121,12 +107,14 @@ export class AuthController {
                     ]
                 );
 
+            // Decrypt password and compare with input password using bcrypt
             const decrypted = decrypt(user.password);
             const pass = bcrypt.compareSync(
                 password,
                 new Cryptr(user.privateKey).decrypt(decrypted)
             );
 
+            // If password is invalid, throw an error
             if (!pass)
                 throw new HttpException(
                     HTTP_RESPONSE_CODE.BAD_REQUEST,
@@ -139,33 +127,12 @@ export class AuthController {
                     ]
                 );
 
+            // Respond with success and token and user data
             res.status(HTTP_RESPONSE_CODE.SUCCESS).json({
                 token: encrypt(user.generateToken()),
                 ...user.toJSON(),
             });
-        } catch (err) {
-            let error = err;
-
-            if (err instanceof HttpException)
-                error = new HttpException(
-                    HTTP_RESPONSE_CODE.BAD_REQUEST,
-                    err.message,
-                    err.errors
-                );
-
-            if (err instanceof ZodError) {
-                const errors = err.errors.map((error) => ({
-                    path: error.path[0].toString(),
-                    message: error.message,
-                }));
-
-                error = new HttpException(
-                    HTTP_RESPONSE_CODE.BAD_REQUEST,
-                    "Invalid request data",
-                    errors
-                );
-            }
-
+        } catch (error) {
             next(error);
         }
     }
