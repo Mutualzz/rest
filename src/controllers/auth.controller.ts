@@ -1,4 +1,4 @@
-import { HTTP_RESPONSE_CODE } from "Constants";
+import { HTTP_RESPONSE_CODE } from "constants/httpConstants";
 import { HttpException } from "exceptions/HttpException";
 import {
     Router,
@@ -7,7 +7,7 @@ import {
     type Response,
 } from "express";
 import UserModel from "models/User";
-import { validateLogin, validateSignup } from "validation/auth.validation";
+import { validateLogin, validateRegister } from "validation/auth.validation";
 
 import bcrypt from "bcrypt";
 import crypto from "crypto";
@@ -20,15 +20,19 @@ export class AuthController {
     router = Router();
 
     constructor() {
-        this.router.post(`${this.path}/signup`, this.signup);
-        this.router.post(`${this.path}/login`, this.login);
+        this.router.post(`${this.path}/register`, (...args) =>
+            this.register(...args),
+        );
+        this.router.post(`${this.path}/login`, (...args) =>
+            this.login(...args),
+        );
     }
 
-    async signup(req: Request, res: Response, next: NextFunction) {
+    async register(req: Request, res: Response, next: NextFunction) {
         try {
             // Destructure and validate request body
             const { username, email, password, globalName, dateOfBirth } =
-                validateSignup.parse(req.body);
+                validateRegister.parse(req.body);
 
             // Check if user already exists
             const userExists = await UserModel.findOne({
@@ -40,14 +44,14 @@ export class AuthController {
                 if (userExists.username === username) {
                     throw new HttpException(
                         HTTP_RESPONSE_CODE.BAD_REQUEST,
-                        "Username already exists"
+                        "Username already exists",
                     );
                 }
 
                 if (userExists.email === email) {
                     throw new HttpException(
                         HTTP_RESPONSE_CODE.BAD_REQUEST,
-                        "Email already exists"
+                        "Email already exists",
                     );
                 }
             }
@@ -104,14 +108,14 @@ export class AuthController {
                             path: "password",
                             message: "Invalid username or password",
                         },
-                    ]
+                    ],
                 );
 
             // Decrypt password and compare with input password using bcrypt
             const decrypted = decrypt(user.password);
             const pass = bcrypt.compareSync(
                 password,
-                new Cryptr(user.privateKey).decrypt(decrypted)
+                new Cryptr(user.privateKey).decrypt(decrypted),
             );
 
             // If password is invalid, throw an error
@@ -124,7 +128,7 @@ export class AuthController {
                             path: "password",
                             message: "Invalid username or password",
                         },
-                    ]
+                    ],
                 );
 
             // Respond with success and token and user data

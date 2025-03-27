@@ -1,8 +1,12 @@
-import { Schema, model } from "mongoose";
 import jwt from "jsonwebtoken";
+import logger from "logger";
+import { Schema, model } from "mongoose";
 
 const { JWT_SECRET } = process.env;
-if (!JWT_SECRET) throw new Error("No JWT secret provided");
+if (!JWT_SECRET) {
+    logger.error("JWT_SECRET is not defined in the environment");
+    process.exit(1);
+}
 
 const userSchema = new Schema(
     {
@@ -66,7 +70,7 @@ const userSchema = new Schema(
         virtuals: {
             id: {
                 get: function () {
-                    return this._id;
+                    return this._id as string;
                 },
                 set: function (id) {
                     this._id = id;
@@ -89,12 +93,10 @@ const userSchema = new Schema(
             transform: function (_, ret) {
                 delete ret._id;
                 delete ret.__v;
-                delete ret.password;
-                delete ret.privateKey;
                 return ret;
             },
         },
-    }
+    },
 );
 
 userSchema.pre("save", function (next) {

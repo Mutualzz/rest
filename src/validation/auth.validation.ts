@@ -6,7 +6,7 @@ const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 // Regex for password validation (at least 8 characters, 1 uppercase, 1 lowercase, 1 number)
 const pswdRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-export const validateSignup = z
+export const validateRegister = z
     .object({
         username: z
             .string()
@@ -18,7 +18,7 @@ export const validateSignup = z
             .string()
             .regex(
                 pswdRegex,
-                "Password is too weak, must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number"
+                "Password is too weak, must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 number",
             ),
         confirmPassword: z.string(),
         globalName: z.string().optional(),
@@ -44,9 +44,9 @@ export const validateSignup = z
             return new Date().getFullYear() - dateOfBirth.getFullYear() >= 13;
         },
         {
-            message: "You must be at least 13 years old to signup",
+            message: "You must be at least 13 years old to register",
             path: ["dateOfBirth"],
-        }
+        },
     )
     .refine((data) => !emailRegex.test(data.username), {
         message: "Username cannot be an email",

@@ -1,16 +1,16 @@
-import express from "express";
-import logger from "./Logger";
-import helmet from "helmet";
 import bodyParser from "body-parser";
-import multer from "multer";
-import cors from "cors";
-import { createServer, Server } from "http";
 import { AuthController } from "controllers/auth.controller";
+import cors from "cors";
+import express from "express";
+import helmet from "helmet";
+import { createServer, type Server } from "http";
+import multer from "multer";
+import logger from "./logger";
 
-import mongoose from "mongoose";
+import { MainController } from "controllers/index.controller";
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";
-import { MainController } from "controllers/index.controller";
+import mongoose from "mongoose";
 
 const port = process.env.PORT ?? 3000;
 const upload = multer({
@@ -40,7 +40,7 @@ class App {
             cors({
                 origin: "*", // update this to match the domain you will make the request from
                 credentials: true,
-            })
+            }),
         );
         this.app.use(helmet());
         this.app.use(bodyParser.json());

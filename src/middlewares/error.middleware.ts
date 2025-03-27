@@ -1,21 +1,19 @@
-import { HTTP_RESPONSE_CODE } from "Constants";
+import { HTTP_RESPONSE_CODE } from "constants/httpConstants";
 import { HttpException } from "exceptions/HttpException";
 import type { NextFunction, Request, Response } from "express";
-import logger from "Logger";
+import logger from "logger";
 import { ZodError } from "zod";
 
 const errorMiddleware = (
     error: unknown,
     _: Request,
     res: Response,
-    __: NextFunction
+    __: NextFunction,
 ) => {
     logger.error(error);
 
     if (error instanceof HttpException) {
-        const status = error.status || 500;
-        const message = error.message || "Something went wrong";
-        const errors = error.errors || [];
+        const { status, message, errors } = error;
 
         res.status(status).json({
             status,
