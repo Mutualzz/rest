@@ -1,20 +1,10 @@
-export const HTTP_RESPONSE_CODE = {
-    NOT_FOUND: 404,
-    CREATED: 201,
-    CONFLICT: 409,
-    BAD_REQUEST: 400,
-    SUCCESS: 200,
-    UNAUTHORIZED: 401,
-    SERVER_ERROR: 500,
-    FORBIDDEN: 403,
-};
-
-export const enum HttpStatusCode {
-    NOT_FOUND = 404,
-    CREATED = 201,
-    CONFLICT = 409,
-    BAD_REQUEST = 400,
-    SUCCESS = 200,
-    UNAUTHORIZED = 401,
-    FORBIDDEN = 403,
-}
+export const HttpStatusCode = Object.freeze({
+    NotFound: 404,
+    Created: 201,
+    Conflict: 409,
+    BadRequest: 400,
+    Success: 200,
+    Unauthorized: 401,
+    InternalServerError: 500,
+    Forbidden: 403,
+});

@@ -26,7 +26,7 @@ const userSchema = new Schema(
             required: true,
             unique: true,
         },
-        globalName: {
+        displayName: {
             type: String,
             required: false,
         },

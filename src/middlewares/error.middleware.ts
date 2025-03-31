@@ -1,4 +1,4 @@
-import { HTTP_RESPONSE_CODE } from "constants/httpConstants";
+import { HttpStatusCode } from "constants/httpConstants";
 import { HttpException } from "exceptions/HttpException";
 import type { NextFunction, Request, Response } from "express";
 import logger from "logger";
@@ -16,10 +16,11 @@ const errorMiddleware = (
         const { status, message, errors } = error;
 
         res.status(status).json({
-            status,
             message,
             errors,
         });
+
+        return;
     }
 
     if (error instanceof ZodError) {
@@ -28,15 +29,15 @@ const errorMiddleware = (
             message: err.message,
         }));
 
-        res.status(HTTP_RESPONSE_CODE.BAD_REQUEST).json({
-            status: HTTP_RESPONSE_CODE.BAD_REQUEST,
+        res.status(HttpStatusCode.BadRequest).json({
             message: "Invalid request data",
             errors,
         });
+
+        return;
     }
 
-    res.status(500).json({
-        status: 500,
+    res.status(HttpStatusCode.InternalServerError).json({
         message: "Something went wrong",
     });
 };

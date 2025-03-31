@@ -1,34 +1,17 @@
-import { HTTP_RESPONSE_CODE } from "constants/httpConstants";
 import { HttpException } from "exceptions/HttpException";
-import {
-    Router,
-    type NextFunction,
-    type Request,
-    type Response,
-} from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import UserModel from "models/User";
-import { validateLogin, validateRegister } from "validation/auth.validation";
+import { validateLogin, validateRegister } from "validators/auth.validator";
 
 import bcrypt from "bcrypt";
+import { HttpStatusCode } from "constants/httpConstants";
+import { decrypt, encrypt } from "Crypt";
 import crypto from "crypto";
 import Cryptr from "cryptr";
-import { decrypt, encrypt } from "structures/Crypt";
-import { genSnowflake } from "structures/Util";
+import { genSnowflake } from "Utils";
 
-export class AuthController {
-    path = "/auth";
-    router = Router();
-
-    constructor() {
-        this.router.post(`${this.path}/register`, (...args) =>
-            this.register(...args),
-        );
-        this.router.post(`${this.path}/login`, (...args) =>
-            this.login(...args),
-        );
-    }
-
-    async register(req: Request, res: Response, next: NextFunction) {
+export default class AuthController {
+    static async register(req: Request, res: Response, next: NextFunction) {
         try {
             // Destructure and validate request body
             const { username, email, password, globalName, dateOfBirth } =
@@ -43,14 +26,14 @@ export class AuthController {
             if (userExists) {
                 if (userExists.username === username) {
                     throw new HttpException(
-                        HTTP_RESPONSE_CODE.BAD_REQUEST,
+                        HttpStatusCode.BadRequest,
                         "Username already exists",
                     );
                 }
 
                 if (userExists.email === email) {
                     throw new HttpException(
-                        HTTP_RESPONSE_CODE.BAD_REQUEST,
+                        HttpStatusCode.BadRequest,
                         "Email already exists",
                     );
                 }
@@ -80,7 +63,7 @@ export class AuthController {
             });
 
             // Respond with success
-            res.status(HTTP_RESPONSE_CODE.CREATED).json({
+            res.status(HttpStatusCode.Created).json({
                 success: true,
             });
         } catch (error) {
@@ -88,7 +71,7 @@ export class AuthController {
         }
     }
 
-    async login(req: Request, res: Response, next: NextFunction) {
+    static async login(req: Request, res: Response, next: NextFunction) {
         try {
             // Destructure and validate request body
             const { username, email, password } = validateLogin.parse(req.body);
@@ -101,7 +84,7 @@ export class AuthController {
             // If user does not exist, throw an error
             if (!user)
                 throw new HttpException(
-                    HTTP_RESPONSE_CODE.BAD_REQUEST,
+                    HttpStatusCode.BadRequest,
                     "Invalid credentials",
                     [
                         {
@@ -121,7 +104,7 @@ export class AuthController {
             // If password is invalid, throw an error
             if (!pass)
                 throw new HttpException(
-                    HTTP_RESPONSE_CODE.BAD_REQUEST,
+                    HttpStatusCode.BadRequest,
                     "Invalid credentials",
                     [
                         {
@@ -132,7 +115,7 @@ export class AuthController {
                 );
 
             // Respond with success and token and user data
-            res.status(HTTP_RESPONSE_CODE.SUCCESS).json({
+            res.status(HttpStatusCode.Success).json({
                 token: encrypt(user.generateToken()),
                 ...user.toJSON(),
             });

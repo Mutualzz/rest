@@ -1,16 +1,16 @@
 import bodyParser from "body-parser";
-import { AuthController } from "controllers/auth.controller";
 import cors from "cors";
-import express from "express";
+import express, { type Router } from "express";
+import fs from "fs/promises";
 import helmet from "helmet";
-import { createServer, type Server } from "http";
+import { createServer } from "http";
 import multer from "multer";
 import logger from "./logger";
 
-import { MainController } from "controllers/index.controller";
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";
 import mongoose from "mongoose";
+import { pathToFileURL } from "url";
 
 const port = process.env.PORT ?? 3000;
 const upload = multer({
@@ -20,15 +20,10 @@ const upload = multer({
     },
 });
 
-const controllers = [new MainController(), new AuthController()];
 class App {
-    readonly app: express.Application;
-    readonly http: Server;
-
-    constructor() {
-        this.app = express();
-        this.http = createServer(this.app);
-    }
+    readonly app = express();
+    readonly http = createServer(this.app);
+    readonly routes: Router[] = [];
 
     async init() {
         await mongoose
@@ -48,9 +43,7 @@ class App {
 
         this.app.use(authMiddleware);
 
-        controllers.forEach((controller) => {
-            this.app.use("/v1", controller.router);
-        });
+        await this.initRoutes();
 
         this.app.use(errorMiddleware);
     }
@@ -59,6 +52,20 @@ class App {
         this.http.listen(port, () => {
             logger.info(`Server started on port ${port}`);
         });
+    }
+
+    async initRoutes() {
+        const routeFiles = await fs.readdir(`${import.meta.dirname}/routes`);
+        for (const routeFile of routeFiles) {
+            const { default: route } = (await import(
+                pathToFileURL(`${import.meta.dirname}/routes/${routeFile}`).href
+            )) as {
+                default: Router;
+            };
+            this.routes.push(route);
+            this.app.use(`/v1`, route);
+            logger.debug(`Route "${routeFile.split(".")[0]}" loaded`);
+        }
     }
 }
 
