@@ -7,6 +7,7 @@ import { createServer } from "http";
 import multer from "multer";
 import logger from "../../gateway/src/logger";
 
+import Redis from "ioredis";
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";
 import mongoose from "mongoose";
@@ -22,6 +23,13 @@ const upload = multer({
 
 const app = express();
 const http = createServer(app);
+
+const redis = new Redis({
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+    password: process.env.REDIS_PASSWORD,
+    username: process.env.REDIS_USERNAME,
+});
 
 await mongoose
     .connect(process.env.DATABASE ?? "")
@@ -60,6 +68,10 @@ app.use(errorMiddleware);
 
 http.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
+
+    redis.on("connect", () => {
+        logger.info("Connected to Redis");
+    });
 });
 
 export { app, upload };
