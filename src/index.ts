@@ -4,7 +4,6 @@ import express, { type Router } from "express";
 import fs from "fs/promises";
 import helmet from "helmet";
 import { createServer } from "http";
-import Redis from "ioredis";
 import multer from "multer";
 import logger from "../../gateway/src/logger";
 
@@ -19,13 +18,6 @@ const upload = multer({
     limits: {
         fileSize: 8 * 1024 * 1024, // no larger than 8mb
     },
-});
-
-const redis = new Redis({
-    host: process.env.REDIS_HOST,
-    port: parseInt(process.env.REDIS_PORT ?? "6379"),
-    password: process.env.REDIS_PASSWORD,
-    username: process.env.REDIS_USERNAME,
 });
 
 const app = express();
@@ -65,14 +57,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(authMiddleware);
 await initRoutes();
 app.use(errorMiddleware);
-
-redis.on("ready", () => {
-    logger.info("Connected to Redis");
-});
-
-redis.on("error", (err) => {
-    logger.error(`Redis error: ${err}`);
-});
 
 http.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
