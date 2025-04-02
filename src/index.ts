@@ -66,6 +66,14 @@ app.use(authMiddleware);
 await initRoutes();
 app.use(errorMiddleware);
 
+redis.on("ready", () => {
+    logger.info("Connected to Redis");
+});
+
+redis.on("error", (err) => {
+    logger.error(`Redis error: ${err}`);
+});
+
 http.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
 });
