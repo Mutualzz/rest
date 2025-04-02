@@ -1,4 +1,4 @@
-import logger from "logger";
+import logger from "../../gateway/src/logger";
 import { App } from "./Server";
 
 process.on("uncaughtException", (err) => {

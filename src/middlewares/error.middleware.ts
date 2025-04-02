@@ -1,8 +1,8 @@
 import { HttpStatusCode } from "constants/httpConstants";
 import { HttpException } from "exceptions/HttpException";
 import type { NextFunction, Request, Response } from "express";
-import logger from "logger";
 import { ZodError } from "zod";
+import logger from "../../../gateway/src/logger";
 
 const errorMiddleware = (
     error: unknown,

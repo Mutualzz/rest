@@ -5,7 +5,7 @@ import fs from "fs/promises";
 import helmet from "helmet";
 import { createServer } from "http";
 import multer from "multer";
-import logger from "./logger";
+import logger from "../../gateway/src/logger";
 
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";

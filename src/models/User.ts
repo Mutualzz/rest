@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import logger from "logger";
 import { Schema, model } from "mongoose";
+import logger from "../../../gateway/src/logger";
 
 const { JWT_SECRET } = process.env;
 if (!JWT_SECRET) {
