@@ -13,6 +13,11 @@ import errorMiddleware from "middlewares/error.middleware";
 import mongoose from "mongoose";
 import { pathToFileURL } from "url";
 
+process.on("uncaughtException", (err) => {
+    logger.error("Uncaught Exception:", err);
+    process.exit(1);
+});
+
 const port = process.env.PORT ?? 3000;
 const upload = multer({
     storage: multer.memoryStorage(),

@@ -4,7 +4,7 @@
     "": {
       "name": "@mutualzz/rest",
       "dependencies": {
-        "@mutualzz/types": "^1.2.4",
+        "@mutualzz/types": "^1.2.7",
         "@theinternetfolks/snowflake": "^1.3.0",
         "bcrypt": "^5.1.1",
         "body-parser": "^2.2.0",
@@ -17,14 +17,14 @@
         "lodash": "^4.17.21",
         "moment": "^2.30.1",
         "moment-timezone": "^0.5.48",
-        "mongoose": "^8.13.1",
+        "mongoose": "^8.13.2",
         "multer": "^1.4.5-lts.2",
         "winston": "^3.17.0",
         "winston-daily-rotate-file": "^5.0.0",
         "zod": "^3.24.2",
       },
       "devDependencies": {
-        "@eslint/js": "^9.23.0",
+        "@eslint/js": "^9.24.0",
         "@types/bcrypt": "^5.0.2",
         "@types/body-parser": "^1.19.5",
         "@types/bun": "latest",
@@ -35,16 +35,16 @@
         "@types/lodash": "^4.17.16",
         "@types/multer": "^1.4.12",
         "dotenv": "^16.4.7",
-        "eslint": "^9.23.0",
+        "eslint": "^9.24.0",
         "eslint-config-prettier": "^10.1.1",
         "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-prettier": "^5.2.5",
+        "eslint-plugin-prettier": "^5.2.6",
         "eslint-plugin-sonarjs": "^3.0.2",
         "nodemon": "^3.1.9",
         "prettier": "^3.5.3",
         "prettier-plugin-organize-imports": "^4.1.0",
         "tsx": "^4.19.3",
-        "typescript-eslint": "^8.28.0",
+        "typescript-eslint": "^8.29.0",
       },
       "peerDependencies": {
         "typescript": "^5.8.2",
@@ -138,7 +138,7 @@
 
     "@mongodb-js/saslprep": ["@mongodb-js/saslprep@1.2.1", "", { "dependencies": { "sparse-bitfield": "^3.0.3" } }, "sha512-1NCa8GsZ+OFLTw5KkKQS22wLS+Rs+y02sgkhr99Pm4OSXtSDHCJyq0uscPF0qA86ipGYH4PwtC2+a8Y4RKkCcg=="],
 
-    "@mutualzz/types": ["@mutualzz/types@1.2.5", "", { "peerDependencies": { "typescript": "^5.8.2" } }, "sha512-6EzxZKNJdyvVvj2N+FX/I3ghUMy4mXaTD7uTOen3ccLzciKgOFa8CHhe44PnzXsKm8K5WbDigF1WA0YxuotR/w=="],
+    "@mutualzz/types": ["@mutualzz/types@1.2.7", "", { "peerDependencies": { "typescript": "^5.8.2" } }, "sha512-9eGmcEyUi29Z4grUcUJIWdCcRIjeu5GM9RrLLNLLim3uJtBxfMEj+/jR422/ND1uYZSdf1nEeFGIJkHnx2g+sQ=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 

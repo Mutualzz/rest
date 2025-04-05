@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "constants/httpConstants";
+import { HttpStatusCode } from "@mutualzz/types";
 import { type NextFunction, type Request, type Response } from "express";
 
 export default class MainController {

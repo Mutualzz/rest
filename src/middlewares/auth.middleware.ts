@@ -1,5 +1,5 @@
-import type { User } from "@mutualzz/types";
-import { HttpStatusCode } from "constants/httpConstants";
+import { HttpStatusCode, type User } from "@mutualzz/types";
+
 import { HttpException } from "exceptions/HttpException";
 import type { NextFunction, Request, Response } from "express";
 

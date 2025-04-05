@@ -3,8 +3,8 @@ import { type NextFunction, type Request, type Response } from "express";
 import UserModel from "models/User";
 import { validateLogin, validateRegister } from "validators/auth.validator";
 
+import { HttpStatusCode } from "@mutualzz/types";
 import bcrypt from "bcrypt";
-import { HttpStatusCode } from "constants/httpConstants";
 import { decrypt, encrypt } from "Crypt";
 import crypto from "crypto";
 import Cryptr from "cryptr";

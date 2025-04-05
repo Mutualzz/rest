@@ -1,7 +1,7 @@
+import { HttpStatusCode } from "@mutualzz/types";
 import { HttpException } from "exceptions/HttpException";
 import type { Request } from "express";
 import UserModel from "models/User";
-import { HttpStatusCode } from "../constants/httpConstants";
 
 export const checkIfLoggedIn = async (req: Request) => {
     if (!req.user)

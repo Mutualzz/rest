@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "constants/httpConstants";
+import { HttpStatusCode } from "@mutualzz/types";
 import { HttpException } from "exceptions/HttpException";
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
