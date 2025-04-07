@@ -138,7 +138,7 @@
 
     "@mongodb-js/saslprep": ["@mongodb-js/saslprep@1.2.1", "", { "dependencies": { "sparse-bitfield": "^3.0.3" } }, "sha512-1NCa8GsZ+OFLTw5KkKQS22wLS+Rs+y02sgkhr99Pm4OSXtSDHCJyq0uscPF0qA86ipGYH4PwtC2+a8Y4RKkCcg=="],
 
-    "@mutualzz/types": ["@mutualzz/types@1.2.7", "", { "peerDependencies": { "typescript": "^5.8.2" } }, "sha512-9eGmcEyUi29Z4grUcUJIWdCcRIjeu5GM9RrLLNLLim3uJtBxfMEj+/jR422/ND1uYZSdf1nEeFGIJkHnx2g+sQ=="],
+    "@mutualzz/types": ["@mutualzz/types@1.2.8", "", { "peerDependencies": { "typescript": "^5.8.2" } }, "sha512-wLmbMu36ZkDOv9ZQyaMid6HklkgOeTekO1K+5Rb372JqfPFhwtGfhHF6MBRdyNci8j6X8Oc3DNxIlCFOyYokdg=="],
 
     "@nodelib/fs.scandir": ["@nodelib/fs.scandir@2.1.5", "", { "dependencies": { "@nodelib/fs.stat": "2.0.5", "run-parallel": "^1.1.9" } }, "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="],
 
