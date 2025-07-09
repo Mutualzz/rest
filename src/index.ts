@@ -1,7 +1,5 @@
 import "./instrument";
 
-import * as Sentry from "@sentry/bun";
-import bodyParser from "body-parser";
 import cors from "cors";
 import express, { type Router } from "express";
 import fs from "fs/promises";
@@ -10,11 +8,15 @@ import { createServer } from "http";
 import multer from "multer";
 import logger from "./Logger";
 
+import bodyParser from "body-parser";
+import SentryController from "controllers/sentry.controller";
 import Redis from "ioredis";
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";
 import mongoose from "mongoose";
 import { pathToFileURL } from "url";
+
+import * as Sentry from "@sentry/node";
 
 process.on("uncaughtException", (err) => {
     logger.error("Uncaught Exception:", err);
@@ -44,6 +46,29 @@ await mongoose
     .then(() => logger.info("Connected to MongoDB"))
     .catch((err) => logger.error(err));
 
+app.use(
+    cors({
+        origin: [
+            "http://localhost:1420",
+            "http://localhost:5173",
+            "https://mutualzz.com",
+            "https://gateway.mutualzz.com",
+        ],
+        credentials: true,
+    }),
+);
+
+Sentry.setupExpressErrorHandler(app);
+
+app.post(
+    `/v1/sentry`,
+    bodyParser.raw({
+        type: () => true,
+        limit: "16mb",
+    }),
+    (...args) => SentryController.sentry(...args),
+);
+
 const initRoutes = async () => {
     const routeFiles = await fs.readdir(`${import.meta.dirname}/routes`);
     for (const routeFile of routeFiles) {
@@ -58,23 +83,13 @@ const initRoutes = async () => {
     }
 };
 
-app.use(
-    cors({
-        origin: [
-            "http://localhost:1420",
-            "http://localhost:5173",
-            "https://mutualzz.com",
-            "https://gateway.mutualzz.com",
-        ],
-        credentials: true,
-    }),
-);
 app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(authMiddleware);
 await initRoutes();
-Sentry.setupExpressErrorHandler(app);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorMiddleware);
 
 http.listen(port, () => {
