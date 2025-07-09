@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Schema, model } from "mongoose";
-import logger from "../../../gateway/src/logger";
+import logger from "../Logger";
 
 const { JWT_SECRET } = process.env;
 if (!JWT_SECRET) {
@@ -81,18 +81,19 @@ const userSchema = new Schema(
         toJSON: {
             virtuals: true,
             transform: function (_, ret) {
-                delete ret._id;
-                delete ret.__v;
-                delete ret.password;
-                delete ret.privateKey;
+                // This fix is a little hacky, but it works
+                delete (ret as Partial<typeof ret>)._id;
+                delete (ret as Partial<typeof ret>).__v;
+                delete (ret as Partial<typeof ret>).password;
+                delete (ret as Partial<typeof ret>).privateKey;
                 return ret;
             },
         },
         toObject: {
             virtuals: true,
             transform: function (_, ret) {
-                delete ret._id;
-                delete ret.__v;
+                delete (ret as Partial<typeof ret>)._id;
+                delete (ret as Partial<typeof ret>).__v;
                 return ret;
             },
         },

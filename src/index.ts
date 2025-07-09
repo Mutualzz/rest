@@ -1,3 +1,6 @@
+import "./instrument";
+
+import * as Sentry from "@sentry/bun";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, { type Router } from "express";
@@ -5,7 +8,7 @@ import fs from "fs/promises";
 import helmet from "helmet";
 import { createServer } from "http";
 import multer from "multer";
-import logger from "../../gateway/src/logger";
+import logger from "./Logger";
 
 import Redis from "ioredis";
 import authMiddleware from "middlewares/auth.middleware";
@@ -49,6 +52,7 @@ const initRoutes = async () => {
         )) as {
             default: Router;
         };
+
         app.use(`/v1`, route);
         logger.debug(`Route "${routeFile.split(".")[0]}" loaded`);
     }
@@ -58,9 +62,10 @@ app.use(
     cors({
         origin: [
             "http://localhost:1420",
+            "http://localhost:5173",
             "https://mutualzz.com",
             "https://gateway.mutualzz.com",
-        ], // update this to match the domain you will make the request from
+        ],
         credentials: true,
     }),
 );
@@ -69,6 +74,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(authMiddleware);
 await initRoutes();
+Sentry.setupExpressErrorHandler(app);
 app.use(errorMiddleware);
 
 http.listen(port, () => {

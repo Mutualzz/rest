@@ -1,8 +1,8 @@
 import { HttpStatusCode } from "@mutualzz/types";
-import { HttpException } from "exceptions/HttpException";
 import type { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
-import logger from "../../../gateway/src/logger";
+import { HttpException } from "../exceptions/HttpException";
+import logger from "../Logger";
 
 const errorMiddleware = (
     error: unknown,

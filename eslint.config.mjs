@@ -56,6 +56,7 @@ export default tseslint.config(
             "@typescript-eslint/no-misused-promises": "off",
             "@typescript-eslint/restrict-template-expressions": "off",
             "@typescript-eslint/prefer-for-of": "warn",
+            "@typescript-eslint/no-unsafe-assignment": "off",
             "sonarjs/cognitive-complexity": "off",
             "sonarjs/no-nested-conditional": "off",
             "sonarjs/no-small-switch": "warn",
