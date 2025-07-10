@@ -1,22 +1,20 @@
 import "./instrument";
 
+import * as Sentry from "@sentry/node";
+import bodyParser from "body-parser";
+import SentryController from "controllers/sentry.controller";
 import cors from "cors";
 import express, { type Router } from "express";
 import fs from "fs/promises";
 import helmet from "helmet";
 import { createServer } from "http";
-import multer from "multer";
-import logger from "./Logger";
-
-import bodyParser from "body-parser";
-import SentryController from "controllers/sentry.controller";
 import Redis from "ioredis";
 import authMiddleware from "middlewares/auth.middleware";
 import errorMiddleware from "middlewares/error.middleware";
 import mongoose from "mongoose";
+import multer from "multer";
 import { pathToFileURL } from "url";
-
-import * as Sentry from "@sentry/node";
+import logger from "./Logger";
 
 process.on("uncaughtException", (err) => {
     logger.error("Uncaught Exception:", err);
@@ -32,17 +30,6 @@ const upload = multer({
 });
 
 const app = express();
-app.set("trust proxy", true); // Trust the first proxy (for Nginx, etc.)
-app.use((req, res, next) => {
-    console.log("Incoming request:");
-    console.log("  req.protocol:", req.protocol);
-    console.log(
-        "  req.headers['x-forwarded-proto']:",
-        req.headers["x-forwarded-proto"],
-    );
-    console.log("  req.originalUrl:", req.originalUrl);
-    next();
-});
 const http = createServer(app);
 
 const redis = new Redis({
