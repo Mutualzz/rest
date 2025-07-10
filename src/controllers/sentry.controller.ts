@@ -60,8 +60,6 @@ export default class SentryController {
             });
 
             res.status(sentryRes.status).json(await sentryRes.json());
-
-            // console.log("Received Sentry envelope:", envelope);
         } catch (err) {
             next(err);
         }
