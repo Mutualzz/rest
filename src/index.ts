@@ -33,6 +33,16 @@ const upload = multer({
 
 const app = express();
 app.set("trust proxy", true); // Trust the first proxy (for Nginx, etc.)
+app.use((req, res, next) => {
+    console.log("Incoming request:");
+    console.log("  req.protocol:", req.protocol);
+    console.log(
+        "  req.headers['x-forwarded-proto']:",
+        req.headers["x-forwarded-proto"],
+    );
+    console.log("  req.originalUrl:", req.originalUrl);
+    next();
+});
 const http = createServer(app);
 
 const redis = new Redis({
