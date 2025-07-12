@@ -26,7 +26,7 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
 
-        // Flags added by Stealth
+        // Flags added by Azrael
         "baseUrl": "./src"
     }
 }
