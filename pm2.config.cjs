@@ -3,7 +3,7 @@ module.exports = {
         {
             name: "mutualzz-rest",
             script: "bun",
-            args: ["run", "start"],
+            args: ["run", "start:rest"],
             interpreter: "none",
             cwd: "/root/mz",
         },
