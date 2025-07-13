@@ -45,7 +45,8 @@
         "build": "tsup",
         "check-types": "tsc --noEmit",
         "dev": "tsup --watch --env.NODE_ENV development --onSuccess \"bun run dist/index.js\"",
-        "prestart": "bun run dist/index.js"
+        "start": "bun run dist/index.js",
+        "prestart": "bun run build"
     },
     "trustedDependencies": [
         "@sentry-internal/node-cpu-profiler",
