@@ -5,6 +5,7 @@ module.exports = {
             script: "bun",
             args: ["run", "start"],
             interpreter: "none",
+            cwd: "/root/mz",
         },
     ],
 };
