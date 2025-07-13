@@ -3,7 +3,7 @@ module.exports = {
         {
             name: "mutualzz-rest",
             script: "bun",
-            args: ["run", "./src/index.ts"],
+            args: ["run", "start"],
             interpreter: "none",
         },
     ],
