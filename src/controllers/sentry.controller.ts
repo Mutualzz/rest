@@ -59,7 +59,16 @@ export default class SentryController {
                 body: req.body,
             });
 
-            res.status(sentryRes.status).json(await sentryRes.json());
+            if (sentryRes.status !== 200) {
+                res.status(sentryRes.status).json({
+                    error: "Failed to proxy to Sentry",
+                });
+                return;
+            }
+
+            res.status(sentryRes.status).json({
+                message: "Successfully proxied to Sentry",
+            });
         } catch (err) {
             next(err);
         }
