@@ -44,7 +44,7 @@ const userSchema = new Schema(
         },
         createdTimestamp: {
             type: Number,
-            requited: true,
+            required: true,
         },
         createdAt: {
             type: Date,
