@@ -10,7 +10,7 @@ if (!JWT_SECRET) {
 
 const userSchema = new Schema(
     {
-        _id: {
+        id: {
             type: String,
             required: true,
             unique: true,
@@ -60,17 +60,6 @@ const userSchema = new Schema(
         methods: {
             generateToken: function () {
                 return jwt.sign(this.toJSON(), JWT_SECRET);
-            },
-        },
-        // Virtuals
-        virtuals: {
-            id: {
-                get: function () {
-                    return this._id as string;
-                },
-                set: function (id) {
-                    this._id = id;
-                },
             },
         },
         // Making sure we remove sensitive data from the response

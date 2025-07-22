@@ -42,7 +42,7 @@ export default class AuthController {
             const hash = bcrypt.hashSync(password, salt);
 
             await UserModel.create({
-                _id: genSnowflake(),
+                id: genSnowflake(),
                 username,
                 email,
                 globalName,
