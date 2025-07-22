@@ -85,12 +85,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorMiddleware);
 
+redis.on("ready", () => {
+    logger.info("Connected to Redis");
+});
+
 http.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
-
-    redis.on("connect", () => {
-        logger.info("Connected to Redis");
-    });
 });
 
 export { app, upload };
