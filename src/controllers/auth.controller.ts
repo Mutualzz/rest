@@ -5,9 +5,7 @@ import { validateLogin, validateRegister } from "../validators/auth.validator";
 
 import { HttpStatusCode } from "@mutualzz/types";
 import bcrypt from "bcrypt";
-import { decrypt, encrypt } from "Crypt";
-import crypto from "crypto";
-import Cryptr from "cryptr";
+import { encrypt } from "Crypt";
 import { genSnowflake } from "Utils";
 
 export default class AuthController {
@@ -43,18 +41,12 @@ export default class AuthController {
             const salt = bcrypt.genSaltSync(11);
             const hash = bcrypt.hashSync(password, salt);
 
-            // Generate private key, encrypt password, and create new user
-            const privateKey = crypto.randomBytes(256).toString("base64");
-            const encrypted = new Cryptr(privateKey).encrypt(hash);
-            const newPass = encrypt(encrypted);
-
             await UserModel.create({
                 _id: genSnowflake(),
                 username,
                 email,
                 globalName,
-                password: newPass,
-                privateKey,
+                password: hash,
                 dateOfBirth,
                 createdAt: new Date(),
                 createdTimestamp: Date.now(),
@@ -95,11 +87,7 @@ export default class AuthController {
                 );
 
             // Decrypt password and compare with input password using bcrypt
-            const decrypted = decrypt(user.password);
-            const pass = bcrypt.compareSync(
-                password,
-                new Cryptr(user.privateKey).decrypt(decrypted),
-            );
+            const pass = bcrypt.compareSync(password, user.password);
 
             // If password is invalid, throw an error
             if (!pass)

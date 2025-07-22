@@ -38,10 +38,6 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        privateKey: {
-            type: String,
-            required: true,
-        },
         createdTimestamp: {
             type: Number,
             required: true,
@@ -85,7 +81,6 @@ const userSchema = new Schema(
                 delete (ret as Partial<typeof ret>)._id;
                 delete (ret as Partial<typeof ret>).__v;
                 delete (ret as Partial<typeof ret>).password;
-                delete (ret as Partial<typeof ret>).privateKey;
                 return ret;
             },
         },
