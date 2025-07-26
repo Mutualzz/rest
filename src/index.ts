@@ -93,4 +93,4 @@ http.listen(port, () => {
     logger.info(`Server is running on port ${port}`);
 });
 
-export { app, upload };
+export { app, redis, upload };

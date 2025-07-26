@@ -6,7 +6,7 @@ import { validateLogin, validateRegister } from "../validators/auth.validator";
 import { HttpStatusCode } from "@mutualzz/types";
 import bcrypt from "bcrypt";
 import { encrypt } from "Crypt";
-import { genSnowflake } from "Utils";
+import { genSnowflake } from "../utils";
 
 export default class AuthController {
     static async register(req: Request, res: Response, next: NextFunction) {
