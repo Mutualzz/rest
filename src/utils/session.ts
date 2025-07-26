@@ -30,7 +30,7 @@ export const createSession = async (token: string, userId: string) => {
         lastUsedAt: Date.now(),
     });
 
-    await redis.set(`session:${token}`, sessionData);
+    await redis.set(`rest:session:${token}`, sessionData);
     await redis.sadd(`user:${userId}:sessions`, token);
 };
 
@@ -47,24 +47,28 @@ export const verifySessionToken = async (token: string) => {
     );
     if (expectedSignature !== signature) return null;
 
-    const raw = await redis.get(`session:${token}`);
+    const raw = await redis.get(`rest:session:${token}`);
     if (!raw) return null;
 
     const session: Session = JSON.parse(raw);
     session.lastUsedAt = Date.now();
 
-    await redis.set(`session:${token}`, JSON.stringify(session), "KEEPTTL");
+    await redis.set(
+        `rest:session:${token}`,
+        JSON.stringify(session),
+        "KEEPTTL",
+    );
 
     return session;
 };
 
 export const revokeSession = async (token: string) => {
-    const raw = await redis.get(`session:${token}`);
+    const raw = await redis.get(`rest:session:${token}`);
     if (!raw) return false;
 
     const { userId } = JSON.parse(raw);
 
-    await redis.del(`session:${token}`);
+    await redis.del(`rest:session:${token}`);
     await redis.srem(`user:${userId}:sessions`, token);
 
     return true;
@@ -75,7 +79,7 @@ export const revokeAllSessions = async (userId: string) => {
     if (tokens.length === 0) return false;
 
     for (const token of tokens) {
-        await redis.del(`session:${token}`);
+        await redis.del(`rest:session:${token}`);
     }
 
     await redis.del(`user:${userId}:sessions`);
@@ -88,7 +92,7 @@ export const listSessions = async (userId: string) => {
     const sessions: Session[] = [];
 
     for (const token of tokens) {
-        const raw = await redis.get(`session:${token}`);
+        const raw = await redis.get(`rest:session:${token}`);
         if (raw)
             sessions.push({
                 ...JSON.parse(raw),
