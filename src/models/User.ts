@@ -1,6 +1,6 @@
+import { logger } from "@logger";
 import jwt from "jsonwebtoken";
 import { Schema, model } from "mongoose";
-import { logger } from "../logger";
 
 const { JWT_SECRET } = process.env;
 if (!JWT_SECRET) {
@@ -10,11 +10,9 @@ if (!JWT_SECRET) {
 
 const userSchema = new Schema(
     {
-        id: {
+        _id: {
             type: String,
             required: true,
-            unique: true,
-            index: true,
         },
         username: {
             type: String,
@@ -60,6 +58,16 @@ const userSchema = new Schema(
         methods: {
             generateToken: function () {
                 return jwt.sign(this.toJSON(), JWT_SECRET);
+            },
+        },
+        virtuals: {
+            id: {
+                get: function () {
+                    return this._id;
+                },
+                set: function (v: string) {
+                    this._id = v;
+                },
             },
         },
         // Making sure we remove sensitive data from the response

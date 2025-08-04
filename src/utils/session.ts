@@ -1,11 +1,10 @@
+import type { Session } from "@types";
+import { base64UrlEncode, genSnowflake } from "@utils";
 import crypto from "crypto";
-import { redis } from "../index";
-import type { Session } from "../types";
-import { base64UrlEncode, genSnowflake } from "../utils";
+import { redis } from "Server";
 
-if (!process.env.SECRET) {
+if (!process.env.SECRET)
     throw new Error("SECRET environment variable is not set");
-}
 
 export const generateSessionToken = (userId: string) => {
     const timestamp = genSnowflake();
@@ -89,15 +88,28 @@ export const revokeAllSessions = async (userId: string) => {
 
 export const listSessions = async (userId: string) => {
     const tokens = await redis.smembers(`user:${userId}:sessions`);
-    const sessions: Session[] = [];
+    if (tokens.length === 0) return [];
 
-    for (const token of tokens) {
-        const raw = await redis.get(`rest:session:${token}`);
-        if (raw)
-            sessions.push({
-                ...JSON.parse(raw),
-                token,
-            });
+    const keys = tokens.map((token) => `rest:session:${token}`);
+
+    const pipeline = redis.multi();
+    for (const key of keys) {
+        pipeline.get(key);
+    }
+
+    const rawResults = await pipeline.exec();
+    if (!rawResults || !Array.isArray(rawResults)) return [];
+
+    const sessions: Session[] = [];
+    for (let i = 0; i < tokens.length; i++) {
+        const result = rawResults[i];
+        const [err, raw] = result;
+        if (err || !raw) continue;
+
+        sessions.push({
+            ...JSON.parse(raw as string),
+            token: tokens[i],
+        });
     }
 
     return sessions;

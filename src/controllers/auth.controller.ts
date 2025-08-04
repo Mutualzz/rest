@@ -1,13 +1,14 @@
-import { type NextFunction, type Request, type Response } from "express";
-import { HttpException } from "../exceptions/HttpException";
-import UserModel from "../models/User";
-import { validateLogin, validateRegister } from "../validators/auth.validator";
-
+import { BCRYPT_SALT_ROUNDS } from "@constants";
+import { HttpException } from "@exceptions/HttpException";
+import UserModel from "@models/User";
 import { HttpStatusCode } from "@mutualzz/types";
+import { genSnowflake } from "@utils";
+import { createSession, generateSessionToken } from "@utils/session";
+import { validateLogin, validateRegister } from "@validators/auth.validator";
 import bcrypt from "bcrypt";
-import { encrypt } from "Crypt";
-import { genSnowflake } from "../utils";
+import { type NextFunction, type Request, type Response } from "express";
 
+// TODO: Add default avatars from Furxus (it will work lol)
 export default class AuthController {
     static async register(req: Request, res: Response, next: NextFunction) {
         try {
@@ -22,26 +23,24 @@ export default class AuthController {
 
             // If user exists, throw an error
             if (userExists) {
-                if (userExists.username === username) {
+                if (userExists.username === username)
                     throw new HttpException(
                         HttpStatusCode.BadRequest,
                         "Username already exists",
                     );
-                }
 
-                if (userExists.email === email) {
+                if (userExists.email === email)
                     throw new HttpException(
                         HttpStatusCode.BadRequest,
                         "Email already exists",
                     );
-                }
             }
 
             // Hash password
-            const salt = bcrypt.genSaltSync(11);
+            const salt = bcrypt.genSaltSync(BCRYPT_SALT_ROUNDS);
             const hash = bcrypt.hashSync(password, salt);
 
-            await UserModel.create({
+            const newUser = await UserModel.create({
                 id: genSnowflake(),
                 username,
                 email,
@@ -54,9 +53,14 @@ export default class AuthController {
                 updatedTimestamp: Date.now(),
             });
 
+            const token = generateSessionToken(newUser.id);
+            await createSession(token, newUser.id);
+
             // Respond with success
             res.status(HttpStatusCode.Created).json({
                 success: true,
+                token,
+                ...newUser.toJSON(),
             });
         } catch (error) {
             next(error);
@@ -86,7 +90,7 @@ export default class AuthController {
                     ],
                 );
 
-            // Decrypt password and compare with input password using bcrypt
+            // Compare with input password using bcrypt
             const pass = bcrypt.compareSync(password, user.password);
 
             // If password is invalid, throw an error
@@ -102,9 +106,12 @@ export default class AuthController {
                     ],
                 );
 
+            const token = generateSessionToken(user.id);
+            await createSession(token, user.id);
+
             // Respond with success and token and user data
             res.status(HttpStatusCode.Success).json({
-                token: encrypt(user.generateToken()),
+                token,
                 ...user.toJSON(),
             });
         } catch (error) {

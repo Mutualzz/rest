@@ -27,6 +27,24 @@
         "noPropertyAccessFromIndexSignature": false,
 
         // Flags added by Azrael
-        "baseUrl": "./src"
+        "baseUrl": "./src",
+
+        // Paths for module resolution
+        "paths": {
+            "@constants": ["constants.ts"],
+            "@middlewares/*": ["middlewares/*"],
+            "@exceptions/*": ["exceptions/*"],
+            "@types/*": ["types/*"],
+            "@types": ["types.d.ts"],
+            "@server": ["Server.ts"],
+            "@utils/*": ["utils/*"],
+            "@utils": ["utils/index.ts"],
+            "@services/*": ["services/*"],
+            "@controllers/*": ["controllers/*"],
+            "@routes/*": ["routes/*"],
+            "@models/*": ["models/*"],
+            "@validators/*": ["validators/*"],
+            "@logger": ["logger.ts"]
+        }
     }
 }

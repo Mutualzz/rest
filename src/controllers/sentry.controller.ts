@@ -1,6 +1,6 @@
+import { HttpException } from "@exceptions/HttpException";
 import { HttpStatusCode } from "@mutualzz/types";
 import type { NextFunction, Request, Response } from "express";
-import { HttpException } from "../exceptions/HttpException";
 
 const {
     SENTRY_DSN_REST,
@@ -24,7 +24,10 @@ export default class SentryController {
             const dsn = header.dsn as string;
 
             if (dsn !== SENTRY_DSN_REST && dsn !== SENTRY_DSN_REACT)
-                throw new HttpException(500, "Invalid Sentry DSN");
+                throw new HttpException(
+                    HttpStatusCode.InternalServerError,
+                    "Invalid Sentry DSN",
+                );
 
             let upstreamUrl = null;
 
@@ -59,7 +62,7 @@ export default class SentryController {
                 body: req.body,
             });
 
-            if (sentryRes.status !== 200) {
+            if (sentryRes.status !== HttpStatusCode.Success) {
                 res.status(sentryRes.status).json({
                     error: "Failed to proxy to Sentry",
                 });

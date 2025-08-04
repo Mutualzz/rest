@@ -1,8 +1,13 @@
+import { SNOWFLAKE_EPOCH_TIMESTAMP } from "@constants";
 import { Snowflake } from "@theinternetfolks/snowflake";
+import express from "express";
 import { threadId } from "worker_threads";
 
 export const genSnowflake = () =>
-    Snowflake.generate({ timestamp: 1731283200, shard_id: threadId });
+    Snowflake.generate({
+        timestamp: SNOWFLAKE_EPOCH_TIMESTAMP,
+        shard_id: threadId,
+    });
 
 export const base64UrlEncode = (input: Buffer | string) =>
     Buffer.from(input)
@@ -10,3 +15,5 @@ export const base64UrlEncode = (input: Buffer | string) =>
         .replace(/=/g, "")
         .replace(/\+/g, "-")
         .replace(/\//g, "_");
+
+export const createRouter = () => express.Router({ mergeParams: true });

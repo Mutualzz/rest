@@ -1,7 +1,7 @@
+import { HttpException } from "@exceptions/HttpException";
+import UserModel from "@models/User";
 import { HttpStatusCode } from "@mutualzz/types";
 import type { Request } from "express";
-import { HttpException } from "../exceptions/HttpException";
-import UserModel from "../models/User";
 
 export const checkIfLoggedIn = async (req: Request) => {
     if (!req.user)
