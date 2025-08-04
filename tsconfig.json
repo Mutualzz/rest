@@ -26,7 +26,6 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
 
-        // Flags added by Azrael
         "baseUrl": "./src",
 
         // Paths for module resolution
