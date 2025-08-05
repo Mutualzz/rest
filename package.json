@@ -46,7 +46,7 @@
     },
     "private": true,
     "scripts": {
-        "build": "tsup",
+        "build": "bun run check-types && tsup",
         "check-types": "tsc --noEmit",
         "dev": "tsup --watch --env.NODE_ENV development --onSuccess \"bun run dist/index.js\"",
         "prestart": "bun run build",
