@@ -44,9 +44,9 @@
     "scripts": {
         "build": "pnpm check-types && tsup",
         "check-types": "tsc --noEmit",
-        "dev": "tsup --watch --env.NODE_ENV development --onSuccess \"pnpm dist/index.js\"",
+        "dev": "tsup --watch --env.NODE_ENV development --onSuccess \"node dist/index.js\"",
         "prestart": "pnpm build",
-        "start": "pnpm ./dist/index.js"
+        "start": "node ./dist/index.js"
     },
     "type": "module"
 }
