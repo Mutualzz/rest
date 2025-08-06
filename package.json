@@ -40,9 +40,6 @@
         "tsup": "^8.5.0"
     },
     "name": "@mutualzz/rest",
-    "peerDependencies": {
-        "typescript": "^5.8.3"
-    },
     "private": true,
     "scripts": {
         "build": "pnpm check-types && tsup",
