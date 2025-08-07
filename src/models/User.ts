@@ -1,5 +1,4 @@
 import { logger } from "@logger";
-import jwt from "jsonwebtoken";
 import { Schema, model } from "mongoose";
 
 const { JWT_SECRET } = process.env;
@@ -54,12 +53,6 @@ const userSchema = new Schema(
         },
     },
     {
-        // Methods
-        methods: {
-            generateToken: function () {
-                return jwt.sign(this.toJSON(), JWT_SECRET);
-            },
-        },
         virtuals: {
             id: {
                 get: function () {

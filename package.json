@@ -13,15 +13,9 @@
         "fast-glob": "^3.3.3",
         "helmet": "^8.1.0",
         "ioredis": "^5.7.0",
-        "jsonwebtoken": "^9.0.2",
-        "lodash-es": "^4.17.21",
-        "moment": "^2.30.1",
-        "moment-timezone": "^0.6.0",
         "mongoose": "^8.17.0",
         "morgan": "^1.10.1",
         "multer": "^2.0.2",
-        "winston": "^3.17.0",
-        "winston-daily-rotate-file": "^5.0.0",
         "zod": "^4.0.14"
     },
     "devDependencies": {
@@ -30,23 +24,22 @@
         "@types/body-parser": "^1.19.6",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.3",
-        "@types/jsonwebtoken": "^9.0.10",
-        "@types/lodash": "^4.17.20",
         "@types/morgan": "^1.9.10",
         "@types/multer": "2.0.0",
         "@types/node": "^24.2.0",
         "dotenv": "^17.2.1",
         "eslint": "^9.32.0",
-        "tsup": "^8.5.0"
+        "tsup": "^8.5.0",
+        "tsx": "^4.20.3"
     },
     "name": "@mutualzz/rest",
     "private": true,
     "scripts": {
-        "build": "pnpm check-types && tsup",
-        "check-types": "tsc --noEmit",
-        "dev": "tsup --watch --env.NODE_ENV development --onSuccess \"node dist/index.js\"",
+        "build": "pnpm typecheck && tsup",
+        "typecheck": "tsc --noEmit",
+        "dev": "tsup --watch --env.NODE_ENV development --onSuccess \"tsx -r dotenv/config ./dist/index.js\"",
         "prestart": "pnpm build",
-        "start": "node ./dist/index.js"
+        "start": "tsx -r dotenv/config ./dist/index.js"
     },
     "type": "module"
 }
