@@ -41,7 +41,6 @@
             "@controllers/*": ["controllers/*"],
             "@routes/*": ["routes/*"],
             "@models/*": ["models/*"],
-            "@validators/*": ["validators/*"],
             "@logger": ["logger.ts"]
         }
     }

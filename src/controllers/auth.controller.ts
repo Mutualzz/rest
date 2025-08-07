@@ -2,9 +2,9 @@ import { BCRYPT_SALT_ROUNDS } from "@constants";
 import { HttpException } from "@exceptions/HttpException";
 import UserModel from "@models/User";
 import { HttpStatusCode } from "@mutualzz/types";
+import { validateLogin, validateRegister } from "@mutualzz/validators";
 import { genSnowflake } from "@utils";
 import { createSession, generateSessionToken } from "@utils/session";
-import { validateLogin, validateRegister } from "@validators/auth.validator";
 import bcrypt from "bcrypt";
 import { type NextFunction, type Request, type Response } from "express";
 
